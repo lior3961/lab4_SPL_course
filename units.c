@@ -1,3 +1,8 @@
+// task 0 - reading the header of abc command: readelf -h abc
+// readelf -S abc : sections
+//1. Where is the entry point specified, and what is its value? in the ELF header and its value is: 0x80483b0
+//2. How many sections are there in "abc"? there are 29 sections in 'abc'
+
 #include <stdio.h>
 #include <stdlib.h>
 
