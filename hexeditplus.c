@@ -121,6 +121,7 @@ void load_into_memory(state* s) {
     fseek(file, location, SEEK_SET);
     size_t read_size = length * s->unit_size;
     fread(s->mem_buf, s->unit_size, length, file);
+    s->mem_count = read_size;
 
     printf("Loaded %d units into memory\n", length);
 
@@ -145,8 +146,8 @@ void memory_display(state* s) {
     printf("Enter address and length\n");
     fgets(input, sizeof(input), stdin);
     sscanf(input, "%x %d", &addr, &length);
-
-    unsigned char* start_addr = (addr == 0) ? s->mem_buf : (unsigned char*)addr;
+    
+    unsigned char* start_addr = (addr == 0) ? s->mem_buf : s->mem_buf+addr;
 
     if (s->display_mode) {
         printf("Hexadecimal\n===========\n");
@@ -358,6 +359,18 @@ int main() {
 
 
 //task 3:
-// entry point of main - 0804844d , size - 23(16) = 35(10)
-// offset  of main - 0804844d - 08048350 = FD(16) = 253(10)
+// entry point of main - 0804844d , size - 23(16) = 35(10) , offset - 
+// offset  of main - 0804844d - 08048350 + 350 = FD(16) + 350(16) = 253(10) + 848(10) = 450(16) = 1101(10)
+
+// offensive: address of main - 0804841d , size - 23 , entry point - 0x8048320
+// , offset of main -  0804841d - 8048320 + 320 = 41d
+// size of file offensive : 7344
+
+//task4:
+//ntsc: size(count_digits) - 93, address (count_digits) - 0804847d , text offset - 380 , entire size - 7463, entry point - 8048380
+//offset count_digits(ntsc): 0804847d - 8048380 + 380 = 47d
+//digitCounter: size(count_digits) - 23 , address(count_digits) - 119d , text offset - 1070 , entire size - 14940 , entry point - 1070
+//offset count_digits(digitCounter): 119d 
+// gcc -m32 -fno-pie -fno-stack-protector -o digitCounter digitCounter.c
+
 
